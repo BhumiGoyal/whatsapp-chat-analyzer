@@ -5,11 +5,15 @@ def preprocess(data):
     pattern = '\d{1,2}\/\d{1,2}\/\d{2},\s\d{1,2}:\d{2}\s(?:am|pm)\s\-\s'
     messages = re.split(pattern, data)[1:]
     dates = re.findall(pattern, data)
+    cleaned_dates = [date.replace('\u202f', ' ').strip(' - ') for date in dates]
+    if len(messages) == len(cleaned_dates):
+        df = pd.DataFrame({'user_messages': messages, 'date_of_message': cleaned_dates})
 
-    df = pd.DataFrame({'user_messages': messages, 'date_of_message': dates})
-    # convert date_of_message type
-    df['date_of_message'] = pd.to_datetime(df["date_of_message"], format='%d/%m/%y, %I:%M %p - ')
-    df.rename(columns={'date_of_message': 'date'}, inplace=True)
+        # Convert date_of_message type
+        df['date_of_message'] = pd.to_datetime(df["date_of_message"], format='%d/%m/%y, %I:%M %p')
+
+        # Rename the column
+        df.rename(columns={'date_of_message': 'date'}, inplace=True)
 
     users = []
     messages = []
