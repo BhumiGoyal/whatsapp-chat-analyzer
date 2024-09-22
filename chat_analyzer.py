@@ -61,15 +61,16 @@ if uploaded_file is not None:
             st.header("Most Busy Day")
             busy_day = helper.week_activity_map(selected_user, df)
             fig, ax = plt.subplots()
-            ax.pie(busy_day.values, labels=busy_day.index, autopct='%1.1f%%',  colors=plt.cm.Paired.colors)
-            # plt.xticks(rotation='vertical')
+            ax.bar(busy_day.index, busy_day.values)
+            plt.xticks(rotation='vertical')
             st.pyplot(fig)
 
         with col2:
             st.header("Most Busy Month")
             busy_month = helper.monthly_activity_map(selected_user, df)
             fig, ax = plt.subplots()
-            ax.pie(busy_month.values, labels=busy_month.index,autopct='%1.1f%%', colors=plt.cm.Paired.colors)
+            ax.bar(busy_month.index, busy_month.values, color='yellow')
+            plt.xticks(rotation='vertical')
             st.pyplot(fig)
 
         st.title("Weekly Activity Heatmap")
@@ -111,12 +112,12 @@ if uploaded_file is not None:
 
         # Emoji Analysis
         st.title("Emoji Analysis")
-        emoji_df = helper.emoji_helper(selected_user,df)
+        emoji_df = helper.emoji(df)
         col1, col2 = st.columns(2)
 
         with col1:
             st.dataframe(emoji_df)
         with col2:
             fig, ax = plt.subplots()
-            ax.pie(emoji_df[1].head(),labels=emoji_df[0].head(),autopct='%1.1f%%',  colors=plt.cm.Paired.colors)
+            ax.pie(emoji_df['Count'], labels=emoji_df['Emoji'], autopct="%0.2f")
             st.pyplot(fig)
